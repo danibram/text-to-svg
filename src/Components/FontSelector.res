@@ -4,7 +4,7 @@ let notificationMethods = [
   ("url", "Url"),
 ]
 @react.component
-let make = (~fontUrl, ~onSelectFont) => {
+let make = (~onSelectFont) => {
   let (fonts, setFonts) = React.useState(() => None)
   let (fontSelected, setFontSelected) = React.useState(() => None)
   let (loading, setLoading) = React.useState(() => true)

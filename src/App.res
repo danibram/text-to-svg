@@ -70,7 +70,7 @@ let make = () => {
               {"Text to svg"->React.string}
             </h3>
           </div>
-          <FontSelector fontUrl onSelectFont={fontUpdate} />
+          <FontSelector onSelectFont={fontUpdate} />
           <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6 flex flex-col gap-4">
             <OptionsForm options onChange={optionsUpdate} />
           </div>
