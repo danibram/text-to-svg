@@ -14,7 +14,7 @@ type t = {
 @react.component
 let make = (~options, ~onChange) => {
   <>
-    <div className="flex">
+    <div className="flex gap-1">
       <Input
         label="Text"
         className="w-full"
@@ -68,7 +68,7 @@ let make = (~options, ~onChange) => {
         }}
       />
     </div>
-    <div className="flex">
+    <div className="flex gap-1">
       <Input
         type_="color"
         label="Fill Color"

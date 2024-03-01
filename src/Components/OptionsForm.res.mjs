@@ -109,7 +109,7 @@ function OptionsForm(props) {
                                 })
                             })
                       ],
-                      className: "flex"
+                      className: "flex gap-1"
                     }),
                 JsxRuntime.jsxs("div", {
                       children: [
@@ -258,7 +258,7 @@ function OptionsForm(props) {
                                 )
                             })
                       ],
-                      className: "flex"
+                      className: "flex gap-1"
                     })
               ]
             });
