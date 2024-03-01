@@ -5,6 +5,8 @@ let notificationMethods = [
 ]
 @react.component
 let make = (~onSelectFont) => {
+  let (fontUrl, setFontUrl) = React.useState(() => None)
+  let (err, setErr) = React.useState(() => None)
   let (fonts, setFonts) = React.useState(() => None)
   let (fontSelected, setFontSelected) = React.useState(() => None)
   let (loading, setLoading) = React.useState(() => true)
@@ -33,6 +35,14 @@ let make = (~onSelectFont) => {
     loadGoogleFonts()->ignore
     None
   })
+
+  let handleChangeFontUrl = (value, errorMsg) => {
+    setErr(_ => None)
+    let re = %re(
+      "/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+.(ttf)$/g"
+    )
+    Re.test(re, value) ? onSelectFont(value) : setErr(_ => Some(errorMsg))
+  }
 
   <>
     <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
@@ -91,11 +101,22 @@ let make = (~onSelectFont) => {
               }
             : React.null}
           {method == #url
-            ? <Input
-                className="w-full"
-                label="Url"
-                onChange={value => onSelectFont(value->Input.getText)}
-              />
+            ? <>
+                <Input
+                  className="w-full"
+                  label="Url"
+                  value={fontUrl->Option.getOr("")}
+                  onChange={value => {
+                    let value = value->Input.getText
+                    setFontUrl(_ => Some(value))
+                    handleChangeFontUrl(value, "Invalid url")
+                  }}
+                />
+                {switch err {
+                | Some(err) => <p className="text-sm text-red-500"> {err->React.string} </p>
+                | None => React.null
+                }}
+              </>
             : React.null}
           {method == #customFile
             ? <Input

@@ -1,6 +1,7 @@
 open OptionsForm
 @react.component
 let make = () => {
+  let (err, setErr) = React.useState(() => None)
   let (time, setTime) = React.useState(() => None)
   let (fontUrl, setFontUrl) = React.useState(() => None)
   let (svg, setSvg) = React.useState(() => None)
@@ -32,6 +33,7 @@ let make = () => {
       fillRule,
     },
   )) => {
+    setErr(_ => None)
     let startTime = Date.now()
     fontUrl->Option.forEach(fontUrl =>
       fontUrl
@@ -58,12 +60,20 @@ let make = () => {
           }
         | Error(err) =>
           Console.error(err->Opentype.Font.Error.toString)
+          setErr(_ => Some(err->Opentype.Font.Error.toString))
           Promise.resolve()
         }
       })
       ->Promise.then(_ => {
         let endTime = Date.now()
         setTime(_ => Some(endTime -. startTime))
+        Promise.resolve()
+      })
+      ->Promise.catch(err => {
+        err
+        ->Exn.asJsExn
+        ->Option.map(Exn.message(_))
+        ->Option.forEach(message => Console.error(message))
         Promise.resolve()
       })
       ->ignore
@@ -109,6 +119,13 @@ let make = () => {
                 }->React.string}
               </div>
             </div>
+            {switch err {
+            | Some(err) =>
+              <div className="flex items-center">
+                <p className="text-sm text-red-500"> {err->React.string} </p>
+              </div>
+            | None => React.null
+            }}
           </div>
           <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
             {switch svg {

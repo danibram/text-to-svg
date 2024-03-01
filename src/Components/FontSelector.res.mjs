@@ -31,21 +31,30 @@ function FontSelector(props) {
   var match = React.useState(function () {
         
       });
-  var setFonts = match[1];
-  var fonts = match[0];
+  var setFontUrl = match[1];
   var match$1 = React.useState(function () {
         
       });
-  var setFontSelected = match$1[1];
+  var setErr = match$1[1];
+  var err = match$1[0];
   var match$2 = React.useState(function () {
+        
+      });
+  var setFonts = match$2[1];
+  var fonts = match$2[0];
+  var match$3 = React.useState(function () {
+        
+      });
+  var setFontSelected = match$3[1];
+  var match$4 = React.useState(function () {
         return true;
       });
-  var setLoading = match$2[1];
-  var match$3 = React.useState(function () {
+  var setLoading = match$4[1];
+  var match$5 = React.useState(function () {
         return "googleFont";
       });
-  var setMethod = match$3[1];
-  var method = match$3[0];
+  var setMethod = match$5[1];
+  var method = match$5[0];
   var loadGoogleFonts = async function () {
     setLoading(function (param) {
           return true;
@@ -149,21 +158,45 @@ function FontSelector(props) {
                                                                 return value;
                                                               });
                                                         }),
-                                                      value: Core__Option.getOr(match$1[0], "__none")
+                                                      value: Core__Option.getOr(match$3[0], "__none")
                                                     }) : (
-                                                  match$2[0] ? JsxRuntime.jsx("div", {
+                                                  match$4[0] ? JsxRuntime.jsx("div", {
                                                           children: "Loading..."
                                                         }) : JsxRuntime.jsx("div", {
                                                           children: "Error loading..."
                                                         })
                                                 )
                                             ) : null,
-                                          method === "url" ? JsxRuntime.jsx(Input.make, {
-                                                  label: "Url",
-                                                  onChange: (function (value) {
-                                                      onSelectFont(Input.getText(value));
-                                                    }),
-                                                  className: "w-full"
+                                          method === "url" ? JsxRuntime.jsxs(JsxRuntime.Fragment, {
+                                                  children: [
+                                                    JsxRuntime.jsx(Input.make, {
+                                                          label: "Url",
+                                                          value: Core__Option.getOr(match[0], ""),
+                                                          onChange: (function (value) {
+                                                              var value$1 = Input.getText(value);
+                                                              setFontUrl(function (param) {
+                                                                    return value$1;
+                                                                  });
+                                                              var errorMsg = "Invalid url";
+                                                              setErr(function (param) {
+                                                                    
+                                                                  });
+                                                              var re = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+.(ttf)$/g;
+                                                              if (re.test(value$1)) {
+                                                                return onSelectFont(value$1);
+                                                              } else {
+                                                                return setErr(function (param) {
+                                                                            return errorMsg;
+                                                                          });
+                                                              }
+                                                            }),
+                                                          className: "w-full"
+                                                        }),
+                                                    err !== undefined ? JsxRuntime.jsx("p", {
+                                                            children: err,
+                                                            className: "text-sm text-red-500"
+                                                          }) : null
+                                                  ]
                                                 }) : null,
                                           method === "customFile" ? JsxRuntime.jsx(Input.make, {
                                                   type_: "file",
