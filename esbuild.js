@@ -48,7 +48,7 @@ const baseCfg = {
     }),
   ],
   define: {
-    "process.env.GOOGLE_API_KEY": process.env.GOOGLE_API_KEY,
+    "process.env.GOOGLE_API_KEY": JSON.stringify(process.env.GOOGLE_API_KEY),
   },
 };
 

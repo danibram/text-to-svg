@@ -1,4 +1,3 @@
-@genType
 let composeModel = (
   text: string,
   //Font
