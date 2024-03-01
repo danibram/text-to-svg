@@ -6,7 +6,7 @@
   "scripts": {
     "reset": "npm-run-all res:clean",
     "res:build": "rescript",
-    "build:tw": "NODE_ENV=production tailwindcss -i src/index.css -o src/tw.css --minify",
+    "build:tw": "NODE_ENV=production tailwindcss -i src/index.css -o dist/tw.css --minify",
     "build:js": "NODE_ENV=production node esbuild.js",
     "clean": "rm -rf dist",
     "build": "npm-run-all clean res:build build:*",
