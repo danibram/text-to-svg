@@ -7,29 +7,11 @@ const isProd =
   process.env.NODE_ENV === "production" ||
   process.argv.includes("--production");
 
-const StyleLoader = {
-  name: "inline-style",
-  setup({ onLoad }) {
-    const template = (css) =>
-      `typeof document<'u'&&` +
-      `document.head.appendChild(document.createElement('style'))` +
-      `.appendChild(document.createTextNode(${JSON.stringify(css)}))`;
-    onLoad({ filter: /\.css$/ }, async (args) => {
-      let css = await fs.promises.readFile(args.path, "utf8");
-      return { contents: template(css) };
-    });
-  },
-};
-
 const baseCfg = {
   entryPoints: [
     {
       in: "src/Main.res.mjs",
       out: "ui",
-    },
-    {
-      in: "src/Lib.res.mjs",
-      out: "lib",
     },
   ],
   outdir: "dist",
@@ -39,10 +21,9 @@ const baseCfg = {
   minify: isProd,
   sourcemap: isProd ? false : "inline",
   plugins: [
-    StyleLoader,
     copy({
       resolveFrom: "cwd",
-      assets: [{ from: ["static/**"], to: ["dist"] }],
+      assets: [{ from: ["public/**"], to: ["dist"] }],
       copyOnStart: true,
       watch: devMode,
     }),

@@ -64,9 +64,6 @@ async function load() {
   var url = "https://www.googleapis.com/webfonts/v1/webfonts?key=" + process.env.GOOGLE_API_KEY;
   var response = await fetch(url);
   var json = await response.json();
-  var fonts = decodeFonts(json);
-  console.log(json);
-  console.log(fonts);
   return decodeFonts(json);
 }
 

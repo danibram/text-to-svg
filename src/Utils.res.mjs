@@ -2,12 +2,34 @@
 
 import * as React from "react";
 import * as Debounce from "rescript-debounce/src/Debounce.res.mjs";
+import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Core__Option from "@rescript/core/src/Core__Option.res.mjs";
+import * as Webapi__Dom__Element from "rescript-webapi/src/Webapi/Dom/Webapi__Dom__Element.res.mjs";
 
 function useDebounced(wait, fn) {
   return React.useRef(Debounce.make(wait, fn)).current;
 }
 
+function download(svgString, name) {
+  var body = Array.prototype.slice.call(document.getElementsByTagName("body"))[0];
+  var element = document.createElement("a");
+  element.setAttribute("href", "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgString));
+  element.setAttribute("download", new Date().toISOString() + ("_" + (name + ".svg")));
+  Core__Option.forEach(body, (function (__x) {
+          __x.appendChild(element);
+        }));
+  Belt_Option.map(Webapi__Dom__Element.asHtmlElement(element), (function (prim) {
+          prim.click();
+        }));
+}
+
+function stringSanitize(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().trim().replace(/[^a-z0-9 -]/g, "").replace(/\s+/g, "-").replace(/--+/g, "-");
+}
+
 export {
   useDebounced ,
+  download ,
+  stringSanitize ,
 }
 /* react Not a pure module */

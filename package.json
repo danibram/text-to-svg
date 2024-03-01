@@ -6,12 +6,12 @@
   "scripts": {
     "reset": "npm-run-all res:clean",
     "res:build": "rescript",
-    "build:tw": "NODE_ENV=production tailwindcss -i src/index.css -o src/tailwind.css --minify",
+    "build:tw": "NODE_ENV=production tailwindcss -i src/index.css -o src/tw.css --minify",
     "build:js": "NODE_ENV=production node esbuild.js",
     "clean": "rm -rf dist",
     "build": "npm-run-all clean res:build build:*",
     "dev:res": "rescript -w",
-    "dev:tw": "tailwindcss -i src/index.css -o dist/tailwind.css --watch",
+    "dev:tw": "tailwindcss -i src/index.css -o dist/tw.css --watch",
     "dev:js": "node esbuild.js --watch",
     "dev:serve": "http-server dist -p 3000 -c-1 --cors",
     "dev": "npm-run-all --parallel dev:*"
@@ -27,7 +27,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rescript": "11.1.0-rc.2",
-    "rescript-debounce": "^2.0.0"
+    "rescript-debounce": "^2.0.0",
+    "rescript-webapi": "^0.9.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.15",

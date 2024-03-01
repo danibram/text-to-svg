@@ -3,6 +3,7 @@
 import * as Lib from "./Lib.res.mjs";
 import * as Utils from "./Utils.res.mjs";
 import * as React from "react";
+import * as Button from "./Components/Button.res.mjs";
 import * as MakerJS from "./Vendor/MakerJS.res.mjs";
 import * as Makerjs from "makerjs";
 import * as Opentype from "./Vendor/Opentype.res.mjs";
@@ -15,14 +16,19 @@ function App(props) {
   var match = React.useState(function () {
         
       });
-  var setFontUrl = match[1];
-  var fontUrl = match[0];
+  var setTime = match[1];
+  var time = match[0];
   var match$1 = React.useState(function () {
         
       });
-  var setSvg = match$1[1];
-  var svg = match$1[0];
+  var setFontUrl = match$1[1];
+  var fontUrl = match$1[0];
   var match$2 = React.useState(function () {
+        
+      });
+  var setSvg = match$2[1];
+  var svg = match$2[0];
+  var match$3 = React.useState(function () {
         return {
                 text: "This is the way",
                 fontSize: 72,
@@ -36,10 +42,12 @@ function App(props) {
                 fillRule: "evenodd"
               };
       });
-  var setOptions = match$2[1];
-  var options = match$2[0];
+  var setOptions = match$3[1];
+  var options = match$3[0];
   var update = function (param) {
     var match = param[1];
+    var fillRule = match.fillRule;
+    var strokeWidth = match.strokeWidth;
     var stroke = match.stroke;
     var fill = match.fill;
     var align = match.align;
@@ -48,16 +56,23 @@ function App(props) {
     var canvasWidth = match.canvasWidth;
     var fontSize = match.fontSize;
     var text = match.text;
+    var startTime = Date.now();
     Core__Option.forEach(param[0], (function (fontUrl) {
             Opentype.Font.load(fontUrl).then(function (fontResult) {
-                  if (fontResult.TAG === "Ok") {
-                    var svg = Makerjs.exporter.toSVG(Lib.composeModel(text, letterSpacing, fontResult._0, fontSize, lineHeight, align, canvasWidth), MakerJS.Options.make(fill, stroke, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
-                    setSvg(function (param) {
-                          return svg;
-                        });
+                    if (fontResult.TAG === "Ok") {
+                      var svg = Makerjs.exporter.toSVG(Lib.composeModel(text, letterSpacing, fontResult._0, fontSize, lineHeight, align, canvasWidth), MakerJS.Options.make(fill, stroke, strokeWidth, fillRule, undefined, undefined, undefined, undefined, undefined, undefined, undefined));
+                      setSvg(function (param) {
+                            return svg;
+                          });
+                      return Promise.resolve();
+                    }
+                    console.error(fontResult._0.toString());
                     return Promise.resolve();
-                  }
-                  console.error(fontResult._0.toString());
+                  }).then(function () {
+                  var endTime = Date.now();
+                  setTime(function (param) {
+                        return endTime - startTime;
+                      });
                   return Promise.resolve();
                 });
           }));
@@ -96,11 +111,34 @@ function App(props) {
                                   JsxRuntime.jsx(FontSelector.make, {
                                         onSelectFont: fontUpdate
                                       }),
-                                  JsxRuntime.jsx("div", {
-                                        children: JsxRuntime.jsx(OptionsForm.make, {
-                                              options: options,
-                                              onChange: optionsUpdate
-                                            }),
+                                  JsxRuntime.jsxs("div", {
+                                        children: [
+                                          JsxRuntime.jsx(OptionsForm.make, {
+                                                options: options,
+                                                onChange: optionsUpdate
+                                              }),
+                                          JsxRuntime.jsxs("div", {
+                                                children: [
+                                                  JsxRuntime.jsx(Button.make, {
+                                                        label: "Download SVG",
+                                                        onClick: (function (param) {
+                                                            Core__Option.forEach(svg, (function (__x) {
+                                                                    Utils.download(__x, Utils.stringSanitize(options.text));
+                                                                  }));
+                                                          }),
+                                                        disabled: svg === undefined
+                                                      }),
+                                                  JsxRuntime.jsxs("div", {
+                                                        children: [
+                                                          "Time: ",
+                                                          time !== undefined ? time.toString() + "ms" : "-"
+                                                        ],
+                                                        className: "ml-4"
+                                                      })
+                                                ],
+                                                className: "flex items-center"
+                                              })
+                                        ],
                                         className: "border-b border-gray-200 bg-white px-4 py-5 sm:px-6 flex flex-col gap-4"
                                       }),
                                   JsxRuntime.jsx("div", {

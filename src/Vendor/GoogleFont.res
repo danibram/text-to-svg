@@ -63,10 +63,6 @@ let load = async () => {
   let url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${Env.googleApiKey}`
   let response = await Fetch.fetch(url)
   let json = await Fetch.Response.json(response)
-  let fonts = json->decodeFonts
-
-  Console.log(json)
-  Console.log(fonts)
 
   json->decodeFonts
 }

@@ -114,7 +114,8 @@ function OptionsForm(props) {
                 JsxRuntime.jsxs("div", {
                       children: [
                         JsxRuntime.jsx(Input.make, {
-                              label: "Fill",
+                              type_: "color",
+                              label: "Fill Color",
                               value: options.fill,
                               onChange: (function (value) {
                                   onChange({
@@ -132,7 +133,8 @@ function OptionsForm(props) {
                                 })
                             }),
                         JsxRuntime.jsx(Input.make, {
-                              label: "Stroke",
+                              type_: "color",
+                              label: "Stroke Color",
                               value: options.stroke,
                               onChange: (function (value) {
                                   onChange({

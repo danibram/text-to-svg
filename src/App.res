@@ -1,6 +1,7 @@
 open OptionsForm
 @react.component
 let make = () => {
+  let (time, setTime) = React.useState(() => None)
   let (fontUrl, setFontUrl) = React.useState(() => None)
   let (svg, setSvg) = React.useState(() => None)
   let (options, setOptions) = React.useState(_ => {
@@ -18,8 +19,20 @@ let make = () => {
 
   let update = ((
     fontUrl,
-    {text, fontSize, letterSpacing, lineHeight, align, canvasWidth, fill, stroke},
-  )) =>
+    {
+      text,
+      fontSize,
+      letterSpacing,
+      lineHeight,
+      align,
+      canvasWidth,
+      fill,
+      stroke,
+      strokeWidth,
+      fillRule,
+    },
+  )) => {
+    let startTime = Date.now()
     fontUrl->Option.forEach(fontUrl =>
       fontUrl
       ->Opentype.Font.load
@@ -36,7 +49,9 @@ let make = () => {
                 ~align,
                 ~canvasWidth,
               )
-              ->MakerJS.TextModel.toSVG(MakerJS.Options.make(~fill, ~stroke))
+              ->MakerJS.TextModel.toSVG(
+                MakerJS.Options.make(~fill, ~stroke, ~strokeWidth, ~fillRule),
+              )
 
             setSvg(_ => Some(svg))
             Promise.resolve()
@@ -46,8 +61,14 @@ let make = () => {
           Promise.resolve()
         }
       })
+      ->Promise.then(_ => {
+        let endTime = Date.now()
+        setTime(_ => Some(endTime -. startTime))
+        Promise.resolve()
+      })
       ->ignore
     )
+  }
 
   let updateDebounced = update->Utils.useDebounced(~wait=500)
 
@@ -73,6 +94,21 @@ let make = () => {
           <FontSelector onSelectFont={fontUpdate} />
           <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6 flex flex-col gap-4">
             <OptionsForm options onChange={optionsUpdate} />
+            <div className="flex items-center">
+              <Button
+                label="Download SVG"
+                disabled={svg == None}
+                onClick={_ =>
+                  svg->Option.forEach(Utils.download(_, options.text->Utils.stringSanitize))}
+              />
+              <div className="ml-4">
+                {"Time: "->React.string}
+                {switch time {
+                | None => "-"
+                | Some(time) => time->Float.toString ++ "ms"
+                }->React.string}
+              </div>
+            </div>
           </div>
           <div className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
             {switch svg {

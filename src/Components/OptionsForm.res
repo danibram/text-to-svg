@@ -70,7 +70,8 @@ let make = (~options, ~onChange) => {
     </div>
     <div className="flex">
       <Input
-        label="Fill"
+        type_="color"
+        label="Fill Color"
         value={options.fill}
         onChange={value => {
           onChange({
@@ -80,7 +81,8 @@ let make = (~options, ~onChange) => {
         }}
       />
       <Input
-        label="Stroke"
+        type_="color"
+        label="Stroke Color"
         value={options.stroke}
         onChange={value => {
           onChange({
